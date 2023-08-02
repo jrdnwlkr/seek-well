@@ -1,25 +1,20 @@
 const express = require('express');
-// Import and require mysql2
 const mysql = require('mysql2');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
 
-// Express middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-// Connect to database
 const db = mysql.createConnection(
   {
     host: 'localhost',
-    // MySQL username,
     user: 'root',
-    // MySQL password
     password: '12Monocle6152!',
-    database: 'shop_db'
+    database: 'people_db'
   },
-  console.log(`Connected to the shop_db database.`)
+  console.log(`Connected to the people_db database.`)
 );
 
 // Query database
