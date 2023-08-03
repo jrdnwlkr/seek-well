@@ -1,15 +1,12 @@
 const express = require("express");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const inquirer = require('inquirer');
 
 const db = mysql.createConnection({
 
   host: "localhost",
-
   user: "root",
-
-  password: "12Monocle6152",
-
+  password: "12Monocle6152!",
   database: "hr_db",
 
 },
@@ -28,6 +25,7 @@ db.connect((err) => {
 });
 
 const app = express();
+const PORT = 3000;
 
 app.get("/createdb", (req, res) => {
 
@@ -47,31 +45,66 @@ app.get("/createdb", (req, res) => {
 
 });
 
+// Connect to the database
+db.connect((err) => {
+  if (err) {
+    console.error('Error connecting to the database: ' + err.stack);
+    return;
+  }
+  console.log('Connected to the database as id ' + connection.threadId);
 
+  start();
+});
 
-inquirer
-  .prompt([
-    {
-      type: 'input',
-      message: 'What is your user name?',
-      name: 'username',
-    },
-    {
-      type: 'password',
-      message: 'What is your password?',
-      name: 'password',
-    },
-    {
-      type: 'password',
-      message: 'Re-enter password to confirm:',
-      name: 'confirm',
-    },
-  ])
-  .then((response) =>
-    response.confirm === response.password
-      ? console.log('Success!')
-      : console.log('You forgot your password already?!')
-  );
+function start() {
+  inquirer
+    .prompt([
+      {
+        type: 'list',
+        name: 'action',
+        message: 'What would you like to do?',
+        choices: ['View all employees', 'Add an Employee', 'Update Employee Role', 'View all Roles', 'Add Role', 'View all Departments', 'Add Department', 'Exit']
+      }
+    ])
+    .then((answer) => {
+      switch (answer.action) {
+        case 'View all employees':
+          viewAllEmployees();
+          break;
+        case 'View employees by department':
+          viewEmployeesByDepartment();
+          break;
+        case 'View employees by role':
+          viewEmployeesByRole();
+          break;
+        case 'Exit':
+          connection.end();
+          console.log('Goodbye!');
+          break;
+      }
+    });
+}
+
+function viewAllEmployees() {
+  connection.query('SELECT * FROM employees', (err, results) => {
+    if (err) throw err;
+    console.table(results);
+    start();
+  });
+}
+
+function viewEmployeesByDepartment() {
+  // Implement your logic here
+  // Need to prompt the user for a department and then query the database
+  // to retrieve employees in that department.
+}
+
+function viewEmployeesByRole() {
+  // Implement your logic here
+  // Similar to viewEmployeesByDepartment, prompt the user for a role and then query the database
+  // to retrieve employees with that role.
+}
+
 
   app.use((req, res) => {
     res.status(404).end();

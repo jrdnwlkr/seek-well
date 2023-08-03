@@ -1,10 +1,10 @@
-DROP DATABASE IF EXISTS shop_db;
+DROP DATABASE IF EXISTS hr_db;
 
-CREATE DATABASE shop_db;
+CREATE DATABASE hr_db;
 
-USE shop_db;
+USE hr_db;
 
-CREATE TABLE inventory ( 
+CREATE TABLE  ( 
     id INT,
     name VARCHAR(100)
 )
