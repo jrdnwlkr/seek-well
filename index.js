@@ -51,7 +51,7 @@ db.connect((err) => {
     console.error('Error connecting to the database: ' + err.stack);
     return;
   }
-  console.log('Connected to the database as id ' + connection.threadId);
+  console.log('Connected to the database as id ' + db.threadId);
 
   start();
 });
@@ -72,10 +72,10 @@ function start() {
           viewAllEmployees();
           break;
         case 'View employees by department':
-          viewEmployeesByDepartment();
+          viewAllRoles();
           break;
         case 'View employees by role':
-          viewEmployeesByRole();
+          viewAllDepartments();
           break;
         case 'Exit':
           connection.end();
@@ -86,25 +86,28 @@ function start() {
 }
 
 function viewAllEmployees() {
-  connection.query('SELECT * FROM employees', (err, results) => {
+  db.query('SELECT * FROM employees', (err, results) => {
     if (err) throw err;
     console.table(results);
     start();
   });
 }
 
-function viewEmployeesByDepartment() {
-  // Implement your logic here
-  // Need to prompt the user for a department and then query the database
-  // to retrieve employees in that department.
-}
+function viewAllRoles() {
+  db.query('SELECT * FROM roles', (err, results) => {
+    if (err) throw err;
+    console.table(results);
+    start();
+  }
+  )};
 
-function viewEmployeesByRole() {
-  // Implement your logic here
-  // Similar to viewEmployeesByDepartment, prompt the user for a role and then query the database
-  // to retrieve employees with that role.
-}
-
+function viewAllDepartments() {
+  db.query('SELECT * FROM departments', (err, results) => {
+    if (err) throw err;
+    console.table(results);
+    start();
+  }
+  )};
 
   app.use((req, res) => {
     res.status(404).end();
