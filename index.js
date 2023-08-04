@@ -1,6 +1,7 @@
 const express = require("express");
 const mysql = require("mysql2");
 const inquirer = require('inquirer');
+const fs = require('fs');
 
 const db = mysql.createConnection({
 
@@ -43,6 +44,13 @@ app.get("/createdb", (req, res) => {
 
   });
 
+});
+
+const seedStatements = fs.readFileSync('seed.sql', 'utf8');
+
+db.query(seedStatements, (err, results) => {
+  if (err) throw err;
+  console.log('Database seeded with sample data');
 });
 
 // Connect to the database
