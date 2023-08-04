@@ -75,9 +75,15 @@ function start() {
     ])
     .then((answer) => {
       switch (answer.action) {
-        case 'View all Employees':
+        case 'View all Employee':
           viewAllEmployees();
           break;
+        case 'Add an Employee':
+          addEmployee();
+          break;  
+        case 'Update Employee Role':
+          addEmployee();
+          break;  
         case 'View all Roles':
           viewAllRoles();
           break;
@@ -98,6 +104,38 @@ function viewAllEmployees() {
     console.table(results);
     start();
   });
+}
+
+function addEmployee() {
+  inquirer
+    .prompt([
+      {
+        type: 'input',
+        name: 'first_name',
+        message: "Enter employee's first name:",
+      },
+      {
+        type: 'input',
+        name: 'last_name',
+        message: "Enter employee's last name:",
+      },
+      {
+        type: 'input',
+        name: 'role_id',
+        message: "Enter employee's role ID:",
+      },
+    ])
+    .then((answers) => {
+      db.query(
+        'INSERT INTO employees (first_name, last_name, role_id) VALUES (?, ?, ?)',
+        [answers.first_name, answers.last_name, answers.role_id],
+        (err, results) => {
+          if (err) throw err;
+          console.log('Employee added successfully.');
+          start();
+        }
+      );
+    });
 }
 
 function viewAllRoles() {
