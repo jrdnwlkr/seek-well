@@ -46,14 +46,13 @@ app.get("/createdb", (req, res) => {
 
 });
 
-const seedStatements = fs.readFileSync('seed.sql', 'utf8');
+// const seedStatements = fs.readFileSync('seed.sql', 'utf8');
 
-db.query(seedStatements, (err, results) => {
-  if (err) throw err;
-  console.log('Database seeded with sample data');
-});
+// db.query(seedStatements, (err, results) => {
+//   if (err) throw err;
+//   console.log('Database seeded with sample data');
+// });
 
-// Connect to the database
 db.connect((err) => {
   if (err) {
     console.error('Error connecting to the database: ' + err.stack);
@@ -71,18 +70,18 @@ function start() {
         type: 'list',
         name: 'action',
         message: 'What would you like to do?',
-        choices: ['View all employees', 'Add an Employee', 'Update Employee Role', 'View all Roles', 'Add Role', 'View all Departments', 'Add Department', 'Exit']
+        choices: ['View all Employees', 'Add an Employee', 'Update Employee Role', 'View all Roles', 'Add Role', 'View all Departments', 'Add Department', 'Exit']
       }
     ])
     .then((answer) => {
       switch (answer.action) {
-        case 'View all employees':
+        case 'View all Employees':
           viewAllEmployees();
           break;
-        case 'View employees by department':
+        case 'View all Roles':
           viewAllRoles();
           break;
-        case 'View employees by role':
+        case 'View all Departments':
           viewAllDepartments();
           break;
         case 'Exit':
