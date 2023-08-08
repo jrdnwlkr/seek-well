@@ -75,20 +75,26 @@ function start() {
     ])
     .then((answer) => {
       switch (answer.action) {
-        case 'View all Employee':
+        case 'View all Employees':
           viewAllEmployees();
           break;
         case 'Add an Employee':
           addEmployee();
           break;  
         case 'Update Employee Role':
-          addEmployee();
-          break;  
+          updateEmployeeRole();
+          break;
         case 'View all Roles':
           viewAllRoles();
           break;
+        case 'Add Role':
+          addRole();
+          break;
         case 'View all Departments':
           viewAllDepartments();
+          break;
+        case 'Add Department':
+          addDepartment();
           break;
         case 'Exit':
           connection.end();
@@ -138,6 +144,33 @@ function addEmployee() {
     });
 }
 
+function updateEmployeeRole() {
+  inquirer
+    .prompt([
+      {
+        type: 'input',
+        name: 'employee_id',
+        message: "Enter employee's ID:",
+      },
+      {
+        type: 'input',
+        name: 'new_role_id',
+        message: "Enter new role ID:",
+      },
+    ])
+    .then((answers) => {
+      db.query(
+        'UPDATE employees SET role_id = ? WHERE id = ?',
+        [answers.new_role_id, answers.employee_id],
+        (err, results) => {
+          if (err) throw err;
+          console.log('Employee role updated successfully.');
+          start();
+        }
+      );
+    });
+}
+
 function viewAllRoles() {
   db.query('SELECT * FROM roles', (err, results) => {
     if (err) throw err;
@@ -146,6 +179,38 @@ function viewAllRoles() {
   }
   )};
 
+function addRole() {
+  inquirer
+    .prompt([
+      {
+        type: 'input',
+        name: 'title',
+        message: "Enter role title:",
+      },
+      {
+        type: 'input',
+        name: 'salary',
+        message: "Enter role salary:",
+      },
+      {
+        type: 'input',
+        name: 'department_id',
+        message: "Enter department ID:",
+      },
+    ])
+    .then((answers) => {
+      db.query(
+        'INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)',
+        [answers.title, answers.salary, answers.department_id],
+        (err, results) => {
+          if (err) throw err;
+          console.log('Role added successfully.');
+          start();
+        }
+      );
+    });
+}
+
 function viewAllDepartments() {
   db.query('SELECT * FROM departments', (err, results) => {
     if (err) throw err;
@@ -153,6 +218,28 @@ function viewAllDepartments() {
     start();
   }
   )};
+
+  function addDepartment() {
+    inquirer
+      .prompt([
+        {
+          type: 'input',
+          name: 'name',
+          message: "Enter department name:",
+        },
+      ])
+      .then((answers) => {
+        db.query(
+          'INSERT INTO departments (name) VALUES (?)',
+          [answers.name],
+          (err, results) => {
+            if (err) throw err;
+            console.log('Department added successfully.');
+            start();
+          }
+        );
+      });
+  }
 
   app.use((req, res) => {
     res.status(404).end();
